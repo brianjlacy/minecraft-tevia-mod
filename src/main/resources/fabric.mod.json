@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "tevia",
+  "version": "${version}",
+  "name": "Tevia - LLM Automation Mod",
+  "description": "A Minecraft mod that enables Large Language Models to fully automate a player character through API integration.",
+  "authors": [
+    "Tevia Team"
+  ],
+  "contact": {
+    "homepage": "https://github.com/brianjlacy/minecraft-tevia-mod",
+    "sources": "https://github.com/brianjlacy/minecraft-tevia-mod"
+  },
+  "license": "MIT",
+  "icon": "assets/tevia/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.tevia.TeviaAutomationMod"
+    ]
+  },
+  "mixins": [
+    "tevia.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric-api": "*",
+    "minecraft": "~1.20.1",
+    "java": ">=17"
+  },
+  "suggests": {
+    "modmenu": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": ["library"],
+      "links": {
+        "modmenu.discord": "https://discord.gg/tevia"
+      }
+    }
+  }
+}
