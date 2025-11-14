@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="MIT"
+
+[[mods]]
+modId="teviamod"
+version="1.0.0"
+displayName="Tevia Mod"
+authors="Brian Lacy"
+description='''
+A simple Minecraft mod created as an AI experiment. This mod demonstrates the basic structure of a Forge mod.
+'''
+
+[[dependencies.teviamod]]
+    modId="forge"
+    mandatory=true
+    versionRange="[43,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.teviamod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19.2,1.20)"
+    ordering="NONE"
+    side="BOTH"
