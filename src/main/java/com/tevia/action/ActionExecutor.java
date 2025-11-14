@@ -20,6 +20,11 @@ public class ActionExecutor {
     private final InventoryController inventoryController;
     private final BlockController blockController;
     private final ChatController chatController;
+    private final EntityInteractionController entityInteractionController;
+    private final CraftingController craftingController;
+    private final ContainerController containerController;
+    private final FarmingController farmingController;
+    private final SpecialInteractionController specialInteractionController;
 
     public ActionExecutor(TeviaConfig config) {
         this.config = config;
@@ -29,6 +34,11 @@ public class ActionExecutor {
         this.inventoryController = new InventoryController();
         this.blockController = new BlockController();
         this.chatController = new ChatController();
+        this.entityInteractionController = new EntityInteractionController();
+        this.craftingController = new CraftingController();
+        this.containerController = new ContainerController();
+        this.farmingController = new FarmingController();
+        this.specialInteractionController = new SpecialInteractionController();
     }
 
     /**
@@ -117,9 +127,13 @@ public class ActionExecutor {
             case SNEAK:
             case LOOK:
             case STOP_MOVEMENT:
+            case SWIM_UP:
+            case SWIM_DOWN:
+            case FLY_UP:
+            case FLY_DOWN:
                 return movementController.execute(client, (MovementAction) action);
 
-            // Combat
+            // Combat & Item Use
             case ATTACK:
             case USE_ITEM:
             case BLOCK:
@@ -130,10 +144,39 @@ public class ActionExecutor {
                 }
                 return combatController.execute(client, (CombatAction) action);
 
-            // Inventory
+            // Special actions (eating, drinking, shooting, throwing)
+            case EAT_FOOD:
+            case DRINK_POTION:
+            case SHOOT_BOW:
+            case THROW_ITEM:
+            case SLEEP:
+            case WAKE_UP:
+            case FLIP_LEVER:
+            case PRESS_BUTTON:
+            case ENCHANT_ITEM:
+            case BREW_POTION:
+            case USE_ANVIL:
+            case USE_GRINDSTONE:
+            case USE_SMITHING_TABLE:
+            case USE_STONECUTTER:
+            case USE_LOOM:
+            case USE_CARTOGRAPHY_TABLE:
+            case WRITE_BOOK:
+            case SIGN_BOOK:
+            case EDIT_SIGN:
+            case SET_REPEATER_DELAY:
+            case SET_COMPARATOR_MODE:
+            case USE_ENDER_PEARL:
+            case USE_ENDER_CHEST:
+            case PLACE_ENTITY:
+            case BREAK_ITEM:
+                return specialInteractionController.execute(client, (SpecialAction) action);
+
+            // Inventory management
             case SELECT_HOTBAR_SLOT:
             case SWAP_ITEMS:
             case DROP_ITEM:
+            case DROP_STACK:
             case EQUIP_ARMOR:
                 if (!config.isEnableInventoryManagement()) {
                     action.setFailureReason("Inventory management is disabled in config");
@@ -141,6 +184,18 @@ public class ActionExecutor {
                     return false;
                 }
                 return inventoryController.execute(client, (InventoryAction) action);
+
+            // Crafting
+            case CRAFT_ITEM:
+            case QUICK_CRAFT:
+            case OPEN_INVENTORY:
+            case CLOSE_INVENTORY:
+                if (!config.isEnableInventoryManagement()) {
+                    action.setFailureReason("Inventory management is disabled in config");
+                    action.setCompleted(true);
+                    return false;
+                }
+                return craftingController.execute(client, (CraftingAction) action);
 
             // Block interaction
             case MINE_BLOCK:
@@ -153,8 +208,43 @@ public class ActionExecutor {
                 }
                 return blockController.execute(client, (BlockAction) action);
 
+            // Container interactions
+            case OPEN_CONTAINER:
+            case CLOSE_CONTAINER:
+            case TAKE_FROM_CONTAINER:
+            case PUT_IN_CONTAINER:
+                if (!config.isEnableBlockInteraction()) {
+                    action.setFailureReason("Block interaction is disabled in config");
+                    action.setCompleted(true);
+                    return false;
+                }
+                return containerController.execute(client, (ContainerAction) action);
+
+            // Entity interactions
+            case RIDE_ENTITY:
+            case DISMOUNT_ENTITY:
+            case FEED_ENTITY:
+            case BREED_ENTITY:
+            case SHEAR_ENTITY:
+            case MILK_ENTITY:
+            case LEASH_ENTITY:
+            case UNLEASH_ENTITY:
+                return entityInteractionController.execute(client, (EntityInteractionAction) action);
+
+            // Farming & tools
+            case HOE_DIRT:
+            case PLANT_SEED:
+            case HARVEST_CROP:
+            case BONE_MEAL:
+            case SHEAR_SHEEP:
+            case FISH:
+            case COLLECT_WATER:
+            case COLLECT_LAVA:
+                return farmingController.execute(client, (FarmingAction) action);
+
             // Chat
             case SEND_CHAT:
+            case SEND_COMMAND:
                 if (!config.isEnableChatting()) {
                     action.setFailureReason("Chat is disabled in config");
                     action.setCompleted(true);

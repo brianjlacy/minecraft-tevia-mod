@@ -63,6 +63,14 @@ public class MovementController {
                 action.setCompleted(true);
                 return true;
 
+            case SWIM_UP:
+            case FLY_UP:
+                return handleMovement(action, () -> options.jumpKey.setPressed(true));
+
+            case SWIM_DOWN:
+            case FLY_DOWN:
+                return handleMovement(action, () -> options.sneakKey.setPressed(true));
+
             default:
                 action.setCompleted(true);
                 return false;
